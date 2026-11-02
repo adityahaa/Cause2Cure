@@ -1,0 +1,121 @@
+[
+  {
+    "source": "MAJOR PROJECT/api.py",
+    "repository": "src/api.py",
+    "original_sha256": "e10366027e0e3b4d964af5e2c6ab35fbe12f9620ed0c47a289c92b4388735aa3",
+    "published_sha256": "e10366027e0e3b4d964af5e2c6ab35fbe12f9620ed0c47a289c92b4388735aa3",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/causal.py",
+    "repository": "src/causal.py",
+    "original_sha256": "78ef7a05993aed031a197932ed8071e2b1a4e96cabec514c06e982d53b852a0e",
+    "published_sha256": "78ef7a05993aed031a197932ed8071e2b1a4e96cabec514c06e982d53b852a0e",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/explainability.py",
+    "repository": "src/explainability.py",
+    "original_sha256": "ad3cd1f51b829de55c95c6ef050e8744fe3cf27b0a048d34e7e16be4e3646689",
+    "published_sha256": "ad3cd1f51b829de55c95c6ef050e8744fe3cf27b0a048d34e7e16be4e3646689",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/recommendations.py",
+    "repository": "src/recommendations.py",
+    "original_sha256": "324ae7d2822b6ff08449ebe132968e0b263e3d584181cfa641b79efc8d9300ff",
+    "published_sha256": "324ae7d2822b6ff08449ebe132968e0b263e3d584181cfa641b79efc8d9300ff",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/train_models.py",
+    "repository": "src/train_models.py",
+    "original_sha256": "b09e622984ff630b8258b2745c316ee20bcfadfc919db15af4d8910d8b56a906",
+    "published_sha256": "b09e622984ff630b8258b2745c316ee20bcfadfc919db15af4d8910d8b56a906",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/train_causal.py",
+    "repository": "src/train_causal.py",
+    "original_sha256": "3595064c5cf80ac100b0faa529826e9d67ec2a50f1f8b0e139a2bc0fb37dd242",
+    "published_sha256": "3595064c5cf80ac100b0faa529826e9d67ec2a50f1f8b0e139a2bc0fb37dd242",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/dashboard.html",
+    "repository": "src/dashboard.html",
+    "original_sha256": "85399a3914e835541b1be4b47136ea9e6c3730d838813ffb4c48cc5ef3478fe3",
+    "published_sha256": "c6a0bf62d29cb8b64f8ccfd01ee14cb71f4335f6f4ab31845b2f10141b04cf59",
+    "changes": "Removed hard-coded demonstration login values and their UI hints; login intentionally disabled. No research logic changed."
+  },
+  {
+    "source": "MAJOR PROJECT/tests/test_api.py",
+    "repository": "src/tests/test_api.py",
+    "original_sha256": "40cbd4ee8c66298a8f30860030422eb1bda244daa01703b1aabb96f1ffa8118a",
+    "published_sha256": "40cbd4ee8c66298a8f30860030422eb1bda244daa01703b1aabb96f1ffa8118a",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/data/diabetes_drug_effectiveness.csv",
+    "repository": "src/data/diabetes_drug_effectiveness.csv",
+    "original_sha256": "9bc0f497e98e03b116c792f651683916548882d3cb1ac17c4e350cd795870c22",
+    "published_sha256": "9bc0f497e98e03b116c792f651683916548882d3cb1ac17c4e350cd795870c22",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/requirements.txt",
+    "repository": "requirements.txt",
+    "original_sha256": "496c80b24c4ca810ff3844318eb7ba1767f4ae467e11e4c0c91bfbe2ea6160d5",
+    "published_sha256": "496c80b24c4ca810ff3844318eb7ba1767f4ae467e11e4c0c91bfbe2ea6160d5",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/models/metadata.json",
+    "repository": "src/models/metadata.json",
+    "original_sha256": "37128ccec7b5759dc7bf3719af360b81ebc126f7f565220d6af70fe37ff0002c",
+    "published_sha256": "37128ccec7b5759dc7bf3719af360b81ebc126f7f565220d6af70fe37ff0002c",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/models/shap_metadata.json",
+    "repository": "src/models/shap_metadata.json",
+    "original_sha256": "969f705c51986655c3b2d2183e947b578014aae30ca0f82e54088da9039f5153",
+    "published_sha256": "969f705c51986655c3b2d2183e947b578014aae30ca0f82e54088da9039f5153",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/models/causal/causal_metadata.json",
+    "repository": "src/models/causal/causal_metadata.json",
+    "original_sha256": "c022d0babb65a30c5953f85572407cef0cb0686528af305fc3f26bf064b60bf0",
+    "published_sha256": "c022d0babb65a30c5953f85572407cef0cb0686528af305fc3f26bf064b60bf0",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/models/plots/roc_curves.png",
+    "repository": "src/models/plots/roc_curves.png",
+    "original_sha256": "cf328af8b4fcc05c02bd1aaf8ea998b9cb9e236b6200add71393b5bb9d37ae96",
+    "published_sha256": "cf328af8b4fcc05c02bd1aaf8ea998b9cb9e236b6200add71393b5bb9d37ae96",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/models/plots/confusion_matrix.png",
+    "repository": "src/models/plots/confusion_matrix.png",
+    "original_sha256": "f9f83a1f5db2ad302b34094a77b74d9e9ba36ff17986c60af44394ff32a444a3",
+    "published_sha256": "f9f83a1f5db2ad302b34094a77b74d9e9ba36ff17986c60af44394ff32a444a3",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "MAJOR PROJECT/models/plots/feature_importance.png",
+    "repository": "src/models/plots/feature_importance.png",
+    "original_sha256": "350b01298fcbf7a30f8fc019e42a42a005e9521328ce06f8d5ea6f35f4fe702b",
+    "published_sha256": "350b01298fcbf7a30f8fc019e42a42a005e9521328ce06f8d5ea6f35f4fe702b",
+    "changes": "None; byte-identical copy."
+  },
+  {
+    "source": "Final presentation, slide 13, ppt/media/image5.png",
+    "repository": "docs/figures/system-architecture.png",
+    "original_sha256": "6942e7838530a2405c2409c82906cfafa25ecdd66abf98a3250f283fc5ac869a",
+    "published_sha256": "6942e7838530a2405c2409c82906cfafa25ecdd66abf98a3250f283fc5ac869a",
+    "changes": "None; original embedded image."
+  }
+]
