@@ -1,0 +1,781 @@
+{
+  "dataset_path": "data\\diabetes_drug_effectiveness.csv",
+  "dataset_shape": [
+    4200,
+    32
+  ],
+  "trained_at_utc": "2026-09-22T17:20:09.919727+00:00",
+  "treatment_definition": "T_drug = 1 if drug_v1 > 0, else 0; add-on presence effect, not dose intensity.",
+  "outcome_definition": "effective = 1 when raw treatment_effectiveness == 0; raw data is unchanged.",
+  "adjustment_features": {
+    "metformin": [
+      "age",
+      "gender",
+      "bmi",
+      "hba1c_v1",
+      "glucose_v1",
+      "bp_v1",
+      "adherence",
+      "diet",
+      "exercise",
+      "sulfonylurea_present",
+      "dpp4_present",
+      "sglt2_present",
+      "insulin_present"
+    ],
+    "sulfonylurea": [
+      "age",
+      "gender",
+      "bmi",
+      "hba1c_v1",
+      "glucose_v1",
+      "bp_v1",
+      "adherence",
+      "diet",
+      "exercise",
+      "metformin_present",
+      "dpp4_present",
+      "sglt2_present",
+      "insulin_present"
+    ],
+    "dpp4": [
+      "age",
+      "gender",
+      "bmi",
+      "hba1c_v1",
+      "glucose_v1",
+      "bp_v1",
+      "adherence",
+      "diet",
+      "exercise",
+      "metformin_present",
+      "sulfonylurea_present",
+      "sglt2_present",
+      "insulin_present"
+    ],
+    "sglt2": [
+      "age",
+      "gender",
+      "bmi",
+      "hba1c_v1",
+      "glucose_v1",
+      "bp_v1",
+      "adherence",
+      "diet",
+      "exercise",
+      "metformin_present",
+      "sulfonylurea_present",
+      "dpp4_present",
+      "insulin_present"
+    ],
+    "insulin": [
+      "age",
+      "gender",
+      "bmi",
+      "hba1c_v1",
+      "glucose_v1",
+      "bp_v1",
+      "adherence",
+      "diet",
+      "exercise",
+      "metformin_present",
+      "sulfonylurea_present",
+      "dpp4_present",
+      "sglt2_present"
+    ]
+  },
+  "excluded_post_treatment_features": [
+    "hba1c_v2",
+    "hba1c_v3",
+    "glucose_v2",
+    "glucose_v3",
+    "bp_v2",
+    "bp_v3",
+    "metformin_v2",
+    "metformin_v3",
+    "sulfonylurea_v2",
+    "sulfonylurea_v3",
+    "dpp4_v2",
+    "dpp4_v3",
+    "sglt2_v2",
+    "sglt2_v3",
+    "insulin_v2",
+    "insulin_v3"
+  ],
+  "estimator": "5-fold cross-fitted augmented inverse probability weighting (AIPW/doubly robust)",
+  "cate_method": "EconML XLearner with random-forest outcome and CATE models",
+  "treatments": {
+    "metformin": {
+      "drug": "metformin",
+      "ate_estimate": 0.19056703952615103,
+      "ci": [
+        0.14226126196777145,
+        0.2373199654015558
+      ],
+      "overlap": {
+        "treatment_prevalence": 0.8971,
+        "propensity_range": [
+          0.8111,
+          0.9447
+        ],
+        "overlap_region": [
+          0.8476,
+          0.9285
+        ],
+        "status": "adequate",
+        "positivity_threshold": 0.05
+      },
+      "cluster_cate": {
+        "0": {
+          "mean_cate": 0.2419,
+          "median_cate": 0.2413,
+          "sample_count": 925
+        },
+        "1": {
+          "mean_cate": 0.1679,
+          "median_cate": 0.1654,
+          "sample_count": 1326
+        },
+        "2": {
+          "mean_cate": 0.2388,
+          "median_cate": 0.2438,
+          "sample_count": 820
+        },
+        "3": {
+          "mean_cate": 0.1558,
+          "median_cate": 0.1502,
+          "sample_count": 1129
+        }
+      },
+      "treated_count": 3768,
+      "untreated_count": 432,
+      "adjustment_features": [
+        "age",
+        "gender",
+        "bmi",
+        "hba1c_v1",
+        "glucose_v1",
+        "bp_v1",
+        "adherence",
+        "diet",
+        "exercise",
+        "sulfonylurea_present",
+        "dpp4_present",
+        "sglt2_present",
+        "insulin_present"
+      ],
+      "balance": {
+        "age": {
+          "smd_before": 0.0429,
+          "smd_ipw": 0.0246
+        },
+        "gender": {
+          "smd_before": 0.0053,
+          "smd_ipw": 0.0015
+        },
+        "bmi": {
+          "smd_before": 0.0144,
+          "smd_ipw": 0.0011
+        },
+        "hba1c_v1": {
+          "smd_before": 0.0701,
+          "smd_ipw": 0.0005
+        },
+        "glucose_v1": {
+          "smd_before": -0.0576,
+          "smd_ipw": -0.0022
+        },
+        "bp_v1": {
+          "smd_before": 0.0191,
+          "smd_ipw": -0.0146
+        },
+        "adherence": {
+          "smd_before": -0.0499,
+          "smd_ipw": 0.0115
+        },
+        "diet": {
+          "smd_before": -0.0156,
+          "smd_ipw": 0.007
+        },
+        "exercise": {
+          "smd_before": 0.0437,
+          "smd_ipw": 0.0016
+        },
+        "sulfonylurea_present": {
+          "smd_before": -0.0332,
+          "smd_ipw": -0.0069
+        },
+        "dpp4_present": {
+          "smd_before": -0.0102,
+          "smd_ipw": 0.0124
+        },
+        "sglt2_present": {
+          "smd_before": 0.0574,
+          "smd_ipw": -0.0046
+        },
+        "insulin_present": {
+          "smd_before": -0.0855,
+          "smd_ipw": 0.0041
+        }
+      }
+    },
+    "sulfonylurea": {
+      "drug": "sulfonylurea",
+      "ate_estimate": 0.06970296346337958,
+      "ci": [
+        0.043737966098185026,
+        0.09664287638100452
+      ],
+      "overlap": {
+        "treatment_prevalence": 0.6479,
+        "propensity_range": [
+          0.5666,
+          0.7363
+        ],
+        "overlap_region": [
+          0.5985,
+          0.7028
+        ],
+        "status": "adequate",
+        "positivity_threshold": 0.05
+      },
+      "cluster_cate": {
+        "0": {
+          "mean_cate": 0.0664,
+          "median_cate": 0.0655,
+          "sample_count": 925
+        },
+        "1": {
+          "mean_cate": 0.062,
+          "median_cate": 0.0554,
+          "sample_count": 1326
+        },
+        "2": {
+          "mean_cate": 0.0755,
+          "median_cate": 0.0729,
+          "sample_count": 820
+        },
+        "3": {
+          "mean_cate": 0.0706,
+          "median_cate": 0.064,
+          "sample_count": 1129
+        }
+      },
+      "treated_count": 2721,
+      "untreated_count": 1479,
+      "adjustment_features": [
+        "age",
+        "gender",
+        "bmi",
+        "hba1c_v1",
+        "glucose_v1",
+        "bp_v1",
+        "adherence",
+        "diet",
+        "exercise",
+        "metformin_present",
+        "dpp4_present",
+        "sglt2_present",
+        "insulin_present"
+      ],
+      "balance": {
+        "age": {
+          "smd_before": -0.0164,
+          "smd_ipw": -0.0006
+        },
+        "gender": {
+          "smd_before": 0.0605,
+          "smd_ipw": 0.0006
+        },
+        "bmi": {
+          "smd_before": -0.0018,
+          "smd_ipw": -0.0009
+        },
+        "hba1c_v1": {
+          "smd_before": -0.0265,
+          "smd_ipw": -0.0006
+        },
+        "glucose_v1": {
+          "smd_before": 0.0033,
+          "smd_ipw": 0.0009
+        },
+        "bp_v1": {
+          "smd_before": -0.0028,
+          "smd_ipw": -0.0018
+        },
+        "adherence": {
+          "smd_before": -0.0243,
+          "smd_ipw": 0.0005
+        },
+        "diet": {
+          "smd_before": 0.0271,
+          "smd_ipw": 0.0017
+        },
+        "exercise": {
+          "smd_before": -0.0009,
+          "smd_ipw": 0.0003
+        },
+        "metformin_present": {
+          "smd_before": -0.0211,
+          "smd_ipw": 0.0004
+        },
+        "dpp4_present": {
+          "smd_before": 0.0029,
+          "smd_ipw": -0.0012
+        },
+        "sglt2_present": {
+          "smd_before": 0.0139,
+          "smd_ipw": 0.0008
+        },
+        "insulin_present": {
+          "smd_before": 0.023,
+          "smd_ipw": 0.0
+        }
+      }
+    },
+    "dpp4": {
+      "drug": "dpp4",
+      "ate_estimate": 0.07546656103020184,
+      "ci": [
+        0.05045593747707505,
+        0.101664792574416
+      ],
+      "overlap": {
+        "treatment_prevalence": 0.5533,
+        "propensity_range": [
+          0.4262,
+          0.6873
+        ],
+        "overlap_region": [
+          0.4648,
+          0.6392
+        ],
+        "status": "adequate",
+        "positivity_threshold": 0.05
+      },
+      "cluster_cate": {
+        "0": {
+          "mean_cate": 0.0676,
+          "median_cate": 0.0668,
+          "sample_count": 925
+        },
+        "1": {
+          "mean_cate": 0.0751,
+          "median_cate": 0.0693,
+          "sample_count": 1326
+        },
+        "2": {
+          "mean_cate": 0.0634,
+          "median_cate": 0.0627,
+          "sample_count": 820
+        },
+        "3": {
+          "mean_cate": 0.0873,
+          "median_cate": 0.0853,
+          "sample_count": 1129
+        }
+      },
+      "treated_count": 2324,
+      "untreated_count": 1876,
+      "adjustment_features": [
+        "age",
+        "gender",
+        "bmi",
+        "hba1c_v1",
+        "glucose_v1",
+        "bp_v1",
+        "adherence",
+        "diet",
+        "exercise",
+        "metformin_present",
+        "sulfonylurea_present",
+        "sglt2_present",
+        "insulin_present"
+      ],
+      "balance": {
+        "age": {
+          "smd_before": -0.0467,
+          "smd_ipw": 0.0016
+        },
+        "gender": {
+          "smd_before": 0.0421,
+          "smd_ipw": 0.0002
+        },
+        "bmi": {
+          "smd_before": -0.0528,
+          "smd_ipw": 0.0013
+        },
+        "hba1c_v1": {
+          "smd_before": -0.0211,
+          "smd_ipw": -0.001
+        },
+        "glucose_v1": {
+          "smd_before": -0.074,
+          "smd_ipw": -0.001
+        },
+        "bp_v1": {
+          "smd_before": 0.0296,
+          "smd_ipw": 0.0008
+        },
+        "adherence": {
+          "smd_before": 0.0128,
+          "smd_ipw": 0.0006
+        },
+        "diet": {
+          "smd_before": -0.0954,
+          "smd_ipw": 0.0006
+        },
+        "exercise": {
+          "smd_before": 0.0081,
+          "smd_ipw": -0.0008
+        },
+        "metformin_present": {
+          "smd_before": -0.0062,
+          "smd_ipw": -0.0003
+        },
+        "sulfonylurea_present": {
+          "smd_before": 0.0028,
+          "smd_ipw": -0.0004
+        },
+        "sglt2_present": {
+          "smd_before": -0.0029,
+          "smd_ipw": -0.0007
+        },
+        "insulin_present": {
+          "smd_before": 0.0489,
+          "smd_ipw": 0.0021
+        }
+      }
+    },
+    "sglt2": {
+      "drug": "sglt2",
+      "ate_estimate": 0.0742829039259571,
+      "ci": [
+        0.04751691124764882,
+        0.10039758359858257
+      ],
+      "overlap": {
+        "treatment_prevalence": 0.4933,
+        "propensity_range": [
+          0.357,
+          0.5834
+        ],
+        "overlap_region": [
+          0.4025,
+          0.557
+        ],
+        "status": "adequate",
+        "positivity_threshold": 0.05
+      },
+      "cluster_cate": {
+        "0": {
+          "mean_cate": 0.0927,
+          "median_cate": 0.0939,
+          "sample_count": 925
+        },
+        "1": {
+          "mean_cate": 0.0663,
+          "median_cate": 0.058,
+          "sample_count": 1326
+        },
+        "2": {
+          "mean_cate": 0.1028,
+          "median_cate": 0.1031,
+          "sample_count": 820
+        },
+        "3": {
+          "mean_cate": 0.0433,
+          "median_cate": 0.0425,
+          "sample_count": 1129
+        }
+      },
+      "treated_count": 2072,
+      "untreated_count": 2128,
+      "adjustment_features": [
+        "age",
+        "gender",
+        "bmi",
+        "hba1c_v1",
+        "glucose_v1",
+        "bp_v1",
+        "adherence",
+        "diet",
+        "exercise",
+        "metformin_present",
+        "sulfonylurea_present",
+        "dpp4_present",
+        "insulin_present"
+      ],
+      "balance": {
+        "age": {
+          "smd_before": 0.0204,
+          "smd_ipw": -0.0015
+        },
+        "gender": {
+          "smd_before": -0.0524,
+          "smd_ipw": 0.0008
+        },
+        "bmi": {
+          "smd_before": -0.0124,
+          "smd_ipw": -0.0008
+        },
+        "hba1c_v1": {
+          "smd_before": -0.0091,
+          "smd_ipw": 0.0021
+        },
+        "glucose_v1": {
+          "smd_before": -0.0089,
+          "smd_ipw": 0.0001
+        },
+        "bp_v1": {
+          "smd_before": 0.0339,
+          "smd_ipw": 0.0006
+        },
+        "adherence": {
+          "smd_before": 0.0055,
+          "smd_ipw": -0.0003
+        },
+        "diet": {
+          "smd_before": -0.0268,
+          "smd_ipw": 0.0012
+        },
+        "exercise": {
+          "smd_before": 0.0011,
+          "smd_ipw": -0.001
+        },
+        "metformin_present": {
+          "smd_before": 0.0349,
+          "smd_ipw": -0.003
+        },
+        "sulfonylurea_present": {
+          "smd_before": 0.0132,
+          "smd_ipw": -0.0004
+        },
+        "dpp4_present": {
+          "smd_before": -0.0029,
+          "smd_ipw": 0.001
+        },
+        "insulin_present": {
+          "smd_before": -0.0731,
+          "smd_ipw": 0.0
+        }
+      }
+    },
+    "insulin": {
+      "drug": "insulin",
+      "ate_estimate": 0.043030548291966314,
+      "ci": [
+        -0.0012571527108732636,
+        0.09370794789743607
+      ],
+      "overlap": {
+        "treatment_prevalence": 0.1136,
+        "propensity_range": [
+          0.05,
+          0.3597
+        ],
+        "overlap_region": [
+          0.0586,
+          0.2264
+        ],
+        "status": "adequate",
+        "positivity_threshold": 0.05
+      },
+      "cluster_cate": {
+        "0": {
+          "mean_cate": 0.0438,
+          "median_cate": 0.0428,
+          "sample_count": 925
+        },
+        "1": {
+          "mean_cate": 0.0363,
+          "median_cate": 0.0342,
+          "sample_count": 1326
+        },
+        "2": {
+          "mean_cate": 0.0616,
+          "median_cate": 0.0674,
+          "sample_count": 820
+        },
+        "3": {
+          "mean_cate": 0.0326,
+          "median_cate": 0.0363,
+          "sample_count": 1129
+        }
+      },
+      "treated_count": 477,
+      "untreated_count": 3723,
+      "adjustment_features": [
+        "age",
+        "gender",
+        "bmi",
+        "hba1c_v1",
+        "glucose_v1",
+        "bp_v1",
+        "adherence",
+        "diet",
+        "exercise",
+        "metformin_present",
+        "sulfonylurea_present",
+        "dpp4_present",
+        "sglt2_present"
+      ],
+      "balance": {
+        "age": {
+          "smd_before": -0.0297,
+          "smd_ipw": -0.0053
+        },
+        "gender": {
+          "smd_before": -0.0301,
+          "smd_ipw": 0.0117
+        },
+        "bmi": {
+          "smd_before": -0.0057,
+          "smd_ipw": 0.0045
+        },
+        "hba1c_v1": {
+          "smd_before": 0.2396,
+          "smd_ipw": -0.0599
+        },
+        "glucose_v1": {
+          "smd_before": 0.0473,
+          "smd_ipw": 0.0122
+        },
+        "bp_v1": {
+          "smd_before": 0.0632,
+          "smd_ipw": -0.0128
+        },
+        "adherence": {
+          "smd_before": -0.0327,
+          "smd_ipw": 0.0155
+        },
+        "diet": {
+          "smd_before": -0.1299,
+          "smd_ipw": 0.0032
+        },
+        "exercise": {
+          "smd_before": 0.0586,
+          "smd_ipw": 0.0012
+        },
+        "metformin_present": {
+          "smd_before": -0.0818,
+          "smd_ipw": -0.0008
+        },
+        "sulfonylurea_present": {
+          "smd_before": 0.0347,
+          "smd_ipw": 0.0305
+        },
+        "dpp4_present": {
+          "smd_before": 0.0767,
+          "smd_ipw": -0.0038
+        },
+        "sglt2_present": {
+          "smd_before": -0.1154,
+          "smd_ipw": -0.0121
+        }
+      }
+    }
+  },
+  "warnings": [
+    "Synthetic dataset; data-generation process is not verified.",
+    "Effects require consistency, exchangeability/no unmeasured confounding, and positivity.",
+    "Individual conditional effects are not ground-truth individual outcomes."
+  ],
+  "refutations": {
+    "metformin": {
+      "status": "available",
+      "estimator_for_refutation_only": "DoWhy backdoor.propensity_score_weighting",
+      "original_estimate": 0.18742964083189295,
+      "checks": {
+        "placebo_treatment_refuter": {
+          "status": "available",
+          "new_effect": -0.012532818068232986
+        },
+        "random_common_cause": {
+          "status": "available",
+          "new_effect": 0.187429640831893
+        },
+        "data_subset_refuter": {
+          "status": "available",
+          "new_effect": 0.1883372960841496
+        }
+      }
+    },
+    "sulfonylurea": {
+      "status": "available",
+      "estimator_for_refutation_only": "DoWhy backdoor.propensity_score_weighting",
+      "original_estimate": 0.0680509164790789,
+      "checks": {
+        "placebo_treatment_refuter": {
+          "status": "available",
+          "new_effect": 0.0008823380560301664
+        },
+        "random_common_cause": {
+          "status": "available",
+          "new_effect": 0.0680509164790789
+        },
+        "data_subset_refuter": {
+          "status": "available",
+          "new_effect": 0.06737036632356179
+        }
+      }
+    },
+    "dpp4": {
+      "status": "available",
+      "estimator_for_refutation_only": "DoWhy backdoor.propensity_score_weighting",
+      "original_estimate": 0.07162209113309581,
+      "checks": {
+        "placebo_treatment_refuter": {
+          "status": "available",
+          "new_effect": -1.577393000223748e-05
+        },
+        "random_common_cause": {
+          "status": "available",
+          "new_effect": 0.0716220911330958
+        },
+        "data_subset_refuter": {
+          "status": "available",
+          "new_effect": 0.0715372192587152
+        }
+      }
+    },
+    "sglt2": {
+      "status": "available",
+      "estimator_for_refutation_only": "DoWhy backdoor.propensity_score_weighting",
+      "original_estimate": 0.07495717256846468,
+      "checks": {
+        "placebo_treatment_refuter": {
+          "status": "available",
+          "new_effect": 0.0042494698918567695
+        },
+        "random_common_cause": {
+          "status": "available",
+          "new_effect": 0.07495717256846468
+        },
+        "data_subset_refuter": {
+          "status": "available",
+          "new_effect": 0.07391489802834034
+        }
+      }
+    },
+    "insulin": {
+      "status": "available",
+      "estimator_for_refutation_only": "DoWhy backdoor.propensity_score_weighting",
+      "original_estimate": 0.046758683169636606,
+      "checks": {
+        "placebo_treatment_refuter": {
+          "status": "available",
+          "new_effect": -0.0014638672718363167
+        },
+        "random_common_cause": {
+          "status": "available",
+          "new_effect": 0.04675868316963662
+        },
+        "data_subset_refuter": {
+          "status": "available",
+          "new_effect": 0.0450668245739846
+        }
+      }
+    }
+  }
+}
