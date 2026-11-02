@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CAUSE2CURE — Clinical Decision Support System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --ink:     #0d1117;
+    --paper:   #f4f1eb;
+    --cream:   #ede9df;
+    --steel:   #8492a6;
+    --accent:  #c4603a;
+    --safe:    #2d7d4f;
+    --warn:    #c4603a;
+    --blue:    #2563eb;
+    --surface: #ffffff;
+    --border:  #ddd8ce;
+    --shadow:  0 2px 16px rgba(13,17,23,.06);
+    --radius:  12px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'DM Sans',sans-serif; background:var(--paper); color:var(--ink); min-height:100vh; }
+
+  /* ── LOGIN ── */
+  .login-wrap { min-height:100vh; background:var(--ink); color:var(--paper); overflow:hidden; position:relative; }
+  .login-bg {
+    position:absolute; inset:-2px;
+    background:
+      radial-gradient(1200px 600px at 18% 35%, color-mix(in oklab, var(--accent) 32%, transparent) 0%, transparent 60%),
+      radial-gradient(900px 520px at 72% 28%, color-mix(in oklab, var(--blue) 38%, transparent) 0%, transparent 64%),
+      linear-gradient(140deg, #0d1117 0%, #0b0f14 45%, #0d1117 100%);
+    filter:saturate(1.05);
+  }
+  .login-grid {
+    position:relative;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns: 1.1fr minmax(360px, 480px);
+    gap: clamp(20px, 5vw, 52px);
+    align-items:stretch;
+    padding: clamp(22px, 3.2vw, 44px);
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+  .login-left {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding: clamp(10px, 1.4vw, 18px);
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 30px 90px rgba(0,0,0,.35);
+    overflow:hidden;
+    position:relative;
+  }
+  .login-left::before {
+    content:'';
+    position:absolute; inset:-2px;
+    background:
+      radial-gradient(800px 420px at 12% 20%, rgba(196,96,58,.20) 0%, transparent 55%),
+      radial-gradient(640px 360px at 84% 70%, rgba(37,99,235,.18) 0%, transparent 60%);
+    opacity:.9;
+    pointer-events:none;
+  }
+  .login-left-inner { position:relative; }
+  .brand-row { display:flex; align-items:center; gap:14px; }
+  .brand-mark {
+    width:44px; height:44px; border-radius:14px;
+    background: linear-gradient(145deg, color-mix(in oklab, var(--accent) 74%, #ffffff 10%), color-mix(in oklab, var(--accent) 50%, #000000 20%));
+    box-shadow: 0 14px 40px rgba(196,96,58,.22);
+    display:flex; align-items:center; justify-content:center;
+    border: 1px solid rgba(255,255,255,.22);
+    flex-shrink:0;
+  }
+  .brand-mark svg { width:22px; height:22px; }
+  .login-logo { font-family:'DM Serif Display',serif; font-size:2.15rem; letter-spacing:.01em; color:var(--paper); line-height:1.1; }
+  .login-sub  { margin-top:8px; font-size:13px; color:#ffffffa6; letter-spacing:.08em; text-transform:uppercase; }
+  .login-desc { margin-top:16px; color:#ffffffd6; font-size:15px; line-height:1.65; max-width: 54ch; }
+  .hl-grid { margin-top:26px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:14px; }
+  .hl {
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.04);
+    padding:14px 14px 13px;
+    transition: transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .hl:hover { transform: translateY(-2px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); }
+  .hl-top { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .hl-ic {
+    width:34px; height:34px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .hl-ic svg { width:18px; height:18px; }
+  .hl-title { font-size:13px; font-weight:700; letter-spacing:.02em; color:var(--paper); }
+  .hl-body { font-size:12.5px; color:#ffffffb7; line-height:1.55; }
+  .metrics {
+    margin-top:22px;
+    display:grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap:10px;
+  }
+  .metric {
+    border-radius: 14px;
+    padding: 12px 12px 11px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.03);
+  }
+  .metric-k { font-size:11px; color:#ffffff9a; text-transform:uppercase; letter-spacing:.12em; font-weight:700; }
+  .metric-v { margin-top:8px; font-family:'DM Mono',monospace; font-size:18px; color:var(--paper); }
+  .metric-s { margin-top:4px; font-size:12px; color:#ffffffa0; }
+  .login-footnote { margin-top:20px; font-size:12px; color:#ffffff8f; line-height:1.55; }
+
+  .login-right {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .login-card {
+    background: linear-gradient(180deg, rgba(244,241,235,.85), rgba(244,241,235,.72));
+    color: var(--ink);
+    border-radius: 22px;
+    padding: 34px 32px 30px;
+    box-shadow: 0 42px 110px rgba(0,0,0,.45);
+    border: 1px solid rgba(255,255,255,.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: loginIn .55s ease both;
+  }
+  .login-card-title { font-family:'DM Serif Display',serif; font-size:1.55rem; }
+  .login-card-sub { margin-top:6px; font-size:13px; color:var(--steel); line-height:1.55; }
+  .form-group { margin-top:16px; }
+  .form-group label { display:block; font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--steel); margin-bottom:8px; }
+  .form-group input {
+    width:100%;
+    padding: 13px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,.92);
+    font-size: 15px;
+    font-family:'DM Sans',sans-serif;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    outline:none;
+  }
+  .form-group input:focus { border-color: color-mix(in oklab, var(--accent) 70%, var(--border)); box-shadow: 0 0 0 4px rgba(196,96,58,.12); }
+  .form-group input::placeholder { color: color-mix(in oklab, var(--steel) 70%, transparent); }
+  .btn-primary {
+    width:100%;
+    padding: 13px 14px;
+    margin-top: 18px;
+    background: linear-gradient(180deg, #0d1117, #0b0f14);
+    color: var(--paper);
+    border: 1px solid rgba(13,17,23,.10);
+    border-radius: 12px;
+    font-family:'DM Sans',sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor:pointer;
+    letter-spacing:.03em;
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 40px rgba(13,17,23,.28); }
+  .btn-primary:active { transform: translateY(0px); }
+  .btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(37,99,235,.20), 0 14px 40px rgba(13,17,23,.28); }
+  .btn-primary .btn-ic { width:18px; height:18px; }
+  .login-note { text-align:center; font-size:12px; color:var(--steel); margin-top:16px; }
+  .login-err { color:#b91c1c; font-size:13px; margin-top:12px; background:#fee2e2; border:1px solid #fecaca; padding:10px 12px; border-radius:12px; }
+
+  @keyframes loginIn { from{ opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0);} }
+  @media (prefers-reduced-motion: reduce) {
+    .login-card { animation:none; }
+    .hl { transition:none; }
+    .btn-primary { transition:none; }
+  }
+
+  @media (max-width: 980px) {
+    .login-grid { grid-template-columns: 1fr; max-width: 720px; }
+    .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 520px) {
+    .hl-grid { grid-template-columns: 1fr; }
+    .login-card { padding: 28px 22px 22px; }
+    .login-logo { font-size: 1.9rem; }
+  }
+
+  /* ── LAYOUT ── */
+  .app { display:flex; min-height:100vh; }
+  .sidebar { width:240px; background:var(--ink); display:flex; flex-direction:column; padding:28px 0; position:fixed; height:100vh; z-index:10; }
+  .sidebar-brand { padding:0 24px 28px; border-bottom:1px solid #ffffff15; }
+  .sidebar-brand .logo { font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--paper); }
+  .sidebar-brand .tagline { font-size:11px; color:#ffffff55; letter-spacing:.06em; margin-top:2px; text-transform:uppercase; }
+  .sidebar-nav { flex:1; padding:20px 12px; display:flex; flex-direction:column; gap:4px; }
+  .nav-item { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:9px; cursor:pointer; font-size:14px; color:#ffffffaa; transition:.15s; border:none; background:none; width:100%; text-align:left; }
+  .nav-item:hover   { background:#ffffff12; color:var(--paper); }
+  .nav-item.active  { background:var(--accent); color:white; }
+  .nav-icon { font-size:17px; width:22px; text-align:center; }
+  .sidebar-footer { padding:16px 24px; border-top:1px solid #ffffff15; }
+  .doctor-badge { display:flex; align-items:center; gap:10px; }
+  .avatar { width:36px; height:36px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:white; }
+  .doctor-name { font-size:13px; color:var(--paper); font-weight:500; }
+  .doctor-role { font-size:11px; color:#ffffff55; }
+  .logout-btn { margin-top:10px; padding:8px 14px; background:transparent; border:1px solid #ffffff25; border-radius:7px; color:#ffffff66; font-size:12px; cursor:pointer; width:100%; font-family:'DM Sans',sans-serif; transition:.15s; }
+  .logout-btn:hover { border-color:#ffffff55; color:var(--paper); }
+
+  .main { margin-left:240px; flex:1; padding:36px 40px; }
+  .page-header { margin-bottom:32px; }
+  .page-title { font-family:'DM Serif Display',serif; font-size:2rem; color:var(--ink); }
+  .page-sub { font-size:14px; color:var(--steel); margin-top:4px; }
+
+  /* ── CARDS ── */
+  .card { background:var(--surface); border-radius:var(--radius); padding:28px; border:1px solid var(--border); box-shadow:var(--shadow); }
+  .card-title { font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--steel); margin-bottom:16px; }
+  .card-h { font-family:'DM Serif Display',serif; font-size:1.25rem; margin-bottom:6px; }
+
+  /* ── GRID ── */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .col-span-2 { grid-column:span 2; }
+
+  /* ── STAT BOXES ── */
+  .stat-box { background:var(--surface); border-radius:var(--radius); padding:20px 22px; border:1px solid var(--border); }
+  .stat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--steel); margin-bottom:8px; }
+  .stat-value { font-family:'DM Mono',monospace; font-size:2rem; font-weight:500; color:var(--ink); }
+  .stat-sub   { font-size:12px; color:var(--steel); margin-top:4px; }
+  .stat-badge { display:inline-block; padding:3px 9px; border-radius:100px; font-size:11px; font-weight:600; margin-top:8px; }
+  .badge-safe { background:#d1fae5; color:#065f46; }
+  .badge-warn { background:#fee2e2; color:#991b1b; }
+  .badge-blue { background:#dbeafe; color:#1e40af; }
+
+  /* ── FORM ── */
+  .section-header { font-family:'DM Serif Display',serif; font-size:1.1rem; margin:28px 0 16px; padding-bottom:10px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .section-icon { font-size:18px; }
+  .form-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .form-grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .field label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--steel); margin-bottom:7px; }
+  .field input, .field select { width:100%; padding:11px 13px; border:1.5px solid var(--border); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:14px; background:var(--surface); outline:none; transition:.15s; color:var(--ink); }
+  .field input:focus, .field select:focus { border-color:var(--accent); }
+  .btn-submit { padding:14px 36px; background:var(--ink); color:var(--paper); border:none; border-radius:9px; font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:.2s; display:flex; align-items:center; gap:10px; }
+  .btn-submit:hover { background:var(--accent); }
+  .btn-submit.loading { opacity:.6; pointer-events:none; }
+
+  /* ── RESULT ── */
+  .result-panel { border-radius:16px; padding:32px; margin-top:24px; border:2px solid; animation:fadeUp .4s ease; }
+  .result-panel.effective     { background:#f0fdf4; border-color:#86efac; }
+  .result-panel.not-effective { background:#fff5f5; border-color:#fca5a5; }
+  .result-icon { font-size:3rem; margin-bottom:12px; }
+  .result-verdict { font-family:'DM Serif Display',serif; font-size:2rem; }
+  .confidence-bar { margin-top:18px; }
+  .bar-label { display:flex; justify-content:space-between; font-size:13px; color:var(--steel); margin-bottom:7px; }
+  .bar-track { height:8px; background:#e5e7eb; border-radius:100px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:100px; transition:width 1s cubic-bezier(.4,0,.2,1); }
+
+  /* ── COUNTERFACTUAL ── */
+  .cf-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:16px; }
+  .cf-card { border-radius:12px; padding:20px; border:1px solid var(--border); position:relative; overflow:hidden; }
+  .cf-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .cf-card.s1::before { background:#0ea5e9; }
+  .cf-card.s2::before { background:#f59e0b; }
+  .cf-card.s3::before { background:#10b981; }
+  .cf-scenario { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--steel); margin-bottom:8px; }
+  .cf-name { font-weight:600; font-size:14px; margin-bottom:10px; line-height:1.4; }
+  .cf-delta { font-family:'DM Mono',monospace; font-size:1.75rem; font-weight:500; }
+  .cf-delta.pos { color:var(--safe); }
+  .cf-delta.neg { color:var(--warn); }
+  .cf-delta.neu { color:var(--steel); }
+  .cf-changes { margin-top:12px; }
+  .cf-tag { display:inline-block; background:var(--cream); border-radius:6px; padding:3px 9px; font-size:11px; font-family:'DM Mono',monospace; margin:2px 3px 2px 0; }
+  .cf-rec { margin-top:12px; padding:10px; background:var(--cream); border-radius:8px; font-size:12px; color:var(--steel); line-height:1.5; }
+
+  /* ── RESEARCH ── */
+  .metric-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+  .metric-pill { padding:8px 16px; border-radius:100px; background:var(--cream); font-family:'DM Mono',monospace; font-size:13px; font-weight:500; }
+  .fi-bar { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .fi-label { font-size:13px; width:130px; flex-shrink:0; }
+  .fi-track { flex:1; height:7px; background:var(--cream); border-radius:100px; overflow:hidden; }
+  .fi-fill { height:100%; background:var(--accent); border-radius:100px; }
+  .fi-val { font-family:'DM Mono',monospace; font-size:12px; color:var(--steel); width:44px; text-align:right; }
+  .cluster-cards { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .cluster-card { padding:18px; border-radius:12px; border-left:4px solid; }
+  .cluster-card:nth-child(1) { background:#eff6ff; border-color:#3b82f6; }
+  .cluster-card:nth-child(2) { background:#f0fdf4; border-color:#22c55e; }
+  .cluster-card:nth-child(3) { background:#fff7ed; border-color:#f97316; }
+  .cluster-card:nth-child(4) { background:#fdf4ff; border-color:#a855f7; }
+  .cluster-title { font-weight:700; font-size:14px; margin-bottom:8px; }
+  .cluster-stat { font-size:12px; color:var(--steel); margin-bottom:3px; display:flex; justify-content:space-between; }
+  .cluster-stat strong { font-family:'DM Mono',monospace; color:var(--ink); }
+
+  canvas { max-width:100% !important; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .spinner { display:inline-block; width:18px; height:18px; border:2.5px solid #ffffff55; border-top-color:white; border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .hba1c-table { width:100%; border-collapse:collapse; margin-top:16px; }
+  .hba1c-table th { background:var(--cream); padding:10px 14px; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--steel); font-weight:700; }
+  .hba1c-table td { padding:11px 14px; border-top:1px solid var(--border); font-size:14px; }
+  .hba1c-table tr:hover td { background:var(--cream); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ── BACKEND CONNECTION ────────────────────────────────────────────────────
+const API = "http://localhost:8001";
+
+async function apiRequest(path, options = {}) {
+  let response;
+  try { response = await fetch(`${API}${path}`, options); }
+  catch (_) { throw new Error('Backend unavailable. Start the FastAPI server and try again.'); }
+  const body = await response.json().catch(() => null);
+  if (!response.ok || !body) {
+    const detail = body?.detail;
+    throw new Error(typeof detail === 'string' ? detail : 'The backend returned an invalid response.');
+  }
+  return body;
+}
+
+// ── CHART HELPERS ──────────────────────────────────────────────────────────
+function BarChart({labels, data, colors, title}) {
+  const ref = useRef(); const inst = useRef();
+  useEffect(() => {
+    if (inst.current) inst.current.destroy();
+    inst.current = new Chart(ref.current, { type:'bar', data:{labels, datasets:[{data, backgroundColor:colors||'#c4603a', borderRadius:6}]}, options:{responsive:true, plugins:{legend:{display:false}, title:{display:!!title, text:title, font:{family:'DM Sans', size:13}, color:'#0d1117'}}, scales:{y:{grid:{color:'#f0ece4'}, ticks:{color:'#8492a6'}}, x:{grid:{display:false}, ticks:{color:'#8492a6'}}}}});
+    return () => inst.current?.destroy();
+  }, [labels, data]);
+  return <canvas ref={ref}/>;
+}
+function DoughnutChart({labels, data}) {
+  const ref = useRef(); const inst = useRef();
+  useEffect(() => {
+    if (inst.current) inst.current.destroy();
+    inst.current = new Chart(ref.current, { type:'doughnut', data:{labels, datasets:[{data, backgroundColor:['#3b82f6','#22c55e','#f97316','#a855f7'], borderWidth:0}]}, options:{responsive:true, cutout:'68%', plugins:{legend:{position:'bottom', labels:{font:{family:'DM Sans'}, color:'#0d1117', boxWidth:12}}}}});
+    return () => inst.current?.destroy();
+  }, [labels, data]);
+  return <canvas ref={ref}/>;
+}
+function LineChart({labels, datasets, title}) {
+  const ref = useRef(); const inst = useRef();
+  useEffect(() => {
+    if (inst.current) inst.current.destroy();
+    const ds = datasets.map(d => ({...d, tension:0.4, pointRadius:5, pointHoverRadius:7}));
+    inst.current = new Chart(ref.current, { type:'line', data:{labels, datasets:ds}, options:{responsive:true, plugins:{legend:{labels:{font:{family:'DM Sans'}, color:'#0d1117'}}, title:{display:!!title, text:title}}, scales:{y:{grid:{color:'#f0ece4'}, ticks:{color:'#8492a6'}}, x:{grid:{display:false}, ticks:{color:'#8492a6'}}}}});
+    return () => inst.current?.destroy();
+  }, [labels, datasets]);
+  return <canvas ref={ref}/>;
+}
+
+// ── LOGIN ──────────────────────────────────────────────────────────────────
+function Login({onLogin}) {
+  const [u,setU]=useState(''); const [pw,setPw]=useState(''); const [err,setErr]=useState('');
+  const handle = () => {
+    if (false /* Demonstration credentials removed for publication. */) onLogin({name:'Dr. Sharma', role:'Endocrinologist'});
+    else setErr('Demonstration login disabled in the public research archive.');
+  };
+  return (
+    <div className="login-wrap">
+      <div className="login-bg" aria-hidden="true"/>
+      <div className="login-grid">
+        <section className="login-left" aria-label="CAUSE2CURE platform overview">
+          <div className="login-left-inner">
+            <div className="brand-row">
+              <div className="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3.5c.6 0 1.1.35 1.34.9l.78 1.8c.12.29.41.48.73.48h1.95c1.18 0 1.67 1.52.7 2.2l-1.62 1.16c-.25.18-.35.49-.26.78l.62 1.92c.36 1.1-.89 2.03-1.83 1.35l-1.57-1.13a.9.9 0 0 0-1.06 0l-1.57 1.13c-.94.68-2.2-.25-1.83-1.35l.62-1.92c.09-.29-.01-.6-.26-.78L6 8.88c-.97-.68-.48-2.2.7-2.2h1.95c.32 0 .61-.19.73-.48l.78-1.8c.24-.55.74-.9 1.34-.9Z" fill="rgba(244,241,235,.92)"/>
+                  <path d="M8.2 15.3c1.1 1.9 3 3.2 5.2 3.2 2.2 0 4.1-1.3 5.2-3.2" stroke="rgba(244,241,235,.92)" strokeWidth="1.6" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <div className="login-logo">CAUSE2CURE</div>
+                <div className="login-sub">Clinical Decision Support · Healthcare AI Platform</div>
+              </div>
+            </div>
+
+            <p className="login-desc">
+              Evidence-aligned, clinician-first decision support for patient stratification, treatment response prediction,
+              counterfactual exploration, and recommendation workflows—designed for research rigor and clinical clarity.
+            </p>
+
+            <div className="hl-grid" aria-label="Key features">
+              <div className="hl">
+                <div className="hl-top">
+                  <div className="hl-ic" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M4 16.5V7.6c0-.7.6-1.3 1.3-1.3h13.4c.7 0 1.3.6 1.3 1.3v6.2c0 .7-.6 1.3-1.3 1.3H10l-3.3 2.2c-.9.6-2.1-.1-2.1-1.2Z" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinejoin="round"/>
+                      <path d="M8 13.2l2.1-2.1 1.7 1.7 3.6-3.6" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <div className="hl-title">Prediction</div>
+                </div>
+                <div className="hl-body">Probabilistic treatment effectiveness modeling with calibrated confidence and interpretable signals.</div>
+              </div>
+
+              <div className="hl">
+                <div className="hl-top">
+                  <div className="hl-ic" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M7 11.5a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" stroke="rgba(244,241,235,.88)" strokeWidth="1.6"/>
+                      <path d="M17 18.9a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" stroke="rgba(244,241,235,.88)" strokeWidth="1.6"/>
+                      <path d="M9.5 9.7l5 4.1" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinecap="round"/>
+                      <path d="M15.2 8.6a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8Z" stroke="rgba(244,241,235,.88)" strokeWidth="1.6"/>
+                    </svg>
+                  </div>
+                  <div className="hl-title">Clustering</div>
+                </div>
+                <div className="hl-body">Patient stratification into clinically meaningful cohorts to support pathway design and triage.</div>
+              </div>
+
+              <div className="hl">
+                <div className="hl-top">
+                  <div className="hl-ic" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M7.2 18.2 4.6 19.4l1.2-2.6c.1-.2.1-.4 0-.6A8.7 8.7 0 0 1 4.8 12a7.2 7.2 0 1 1 7.2 7.2c-1.4 0-2.8-.4-4.1-1.1a.6.6 0 0 0-.7.1Z" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinejoin="round"/>
+                      <path d="M9 12h6" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinecap="round"/>
+                      <path d="M12 9v6" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                  <div className="hl-title">Counterfactuals</div>
+                </div>
+                <div className="hl-body">What-if analysis to explore modifiable factors and quantify expected outcome shifts.</div>
+              </div>
+
+              <div className="hl">
+                <div className="hl-top">
+                  <div className="hl-ic" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M6.2 18.2V9.1c0-.8.6-1.4 1.4-1.4h9.2c.8 0 1.4.6 1.4 1.4v9.1c0 .8-.6 1.4-1.4 1.4H7.6c-.8 0-1.4-.6-1.4-1.4Z" stroke="rgba(244,241,235,.88)" strokeWidth="1.6"/>
+                      <path d="M9 11h6" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinecap="round"/>
+                      <path d="M9 14.5h4.2" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinecap="round"/>
+                      <path d="M15.6 14.3l.9.9 1.9-2.2" stroke="rgba(244,241,235,.88)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <div className="hl-title">Recommendations</div>
+                </div>
+                <div className="hl-body">Actionable outputs with traceable rationale designed to support—not replace—clinical judgment.</div>
+              </div>
+            </div>
+
+            <div className="metrics" aria-label="Research metrics">
+              <div className="metric">
+                <div className="metric-k">Patients</div>
+                <div className="metric-v">12,000</div>
+                <div className="metric-s">Study dataset</div>
+              </div>
+              <div className="metric">
+                <div className="metric-k">ROC-AUC</div>
+                <div className="metric-v">0.734</div>
+                <div className="metric-s">Best model</div>
+              </div>
+              <div className="metric">
+                <div className="metric-k">Clusters</div>
+                <div className="metric-v">4</div>
+                <div className="metric-s">Stratification</div>
+              </div>
+              <div className="metric">
+                <div className="metric-k">Features</div>
+                <div className="metric-v">14</div>
+                <div className="metric-s">Baseline (V1)</div>
+              </div>
+            </div>
+
+            <div className="login-footnote">
+              Research-grade CDS. Outputs are probabilistic and must be interpreted by qualified clinicians.
+            </div>
+          </div>
+        </section>
+
+        <aside className="login-right" aria-label="Sign in">
+          <div className="login-card">
+            <div className="login-card-title">Sign in</div>
+            <div className="login-card-sub">Use your clinical account to access patient-level tools and research insights.</div>
+
+            <div className="form-group">
+              <label htmlFor="c2c-username">Username</label>
+              <input
+                id="c2c-username"
+                autoComplete="username"
+                value={u}
+                onChange={e=>setU(e.target.value)}
+                placeholder="Username"
+                onKeyDown={e=>e.key==='Enter'&&handle()}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="c2c-password">Password</label>
+              <input
+                id="c2c-password"
+                type="password"
+                autoComplete="current-password"
+                value={pw}
+                onChange={e=>setPw(e.target.value)}
+                placeholder="••••••••"
+                onKeyDown={e=>e.key==='Enter'&&handle()}
+              />
+            </div>
+
+            {err && <div className="login-err" role="alert">{err}</div>}
+
+            <button className="btn-primary" onClick={handle}>
+              <svg className="btn-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M10.2 16.3 14.6 12l-4.4-4.3" stroke="rgba(244,241,235,.92)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4.8 12h9.7" stroke="rgba(244,241,235,.92)" strokeWidth="1.8" strokeLinecap="round"/>
+                <path d="M15.4 7.2h2.8c.9 0 1.6.7 1.6 1.6v6.4c0 .9-.7 1.6-1.6 1.6h-2.8" stroke="rgba(244,241,235,.62)" strokeWidth="1.6" strokeLinecap="round"/>
+              </svg>
+              Sign In
+            </button>
+
+            <p className="login-note">Demonstration credentials removed for public archival publication.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+// ── PATIENT FORM ───────────────────────────────────────────────────────────
+const DEFAULTS = {age:57,gender:1,bmi:26.5,hba1c_v1:7.4,glucose_v1:195,bp_v1:132,metformin_v1:1,sulfonylurea_v1:1,dpp4_v1:1,sglt2_v1:0,insulin_v1:0,adherence:0,diet:0,exercise:0};
+const PATIENT_CONTEXT_KEY = 'cause2cure_active_patient';
+
+function PatientRequired({onGo}) {
+  return <div className="card"><div className="card-h">No active patient</div><p style={{color:'var(--steel)',marginTop:8}}>Enter patient data in Predict to begin the assessment.</p><button className="btn-submit" style={{marginTop:18}} onClick={onGo}>Go to Predict</button></div>;
+}
+
+function PredictPage({patient,onPatientChange}) {
+  const [form,setForm]=useState(patient || DEFAULTS);
+  const [result,setResult]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState('');
+
+  const set = (k,v) => setForm(p=>({...p,[k]:Number(v)}));
+  useEffect(()=>{ if(patient) setForm(patient); },[patient]);
+
+  const submit = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await apiRequest('/predict', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)});
+      setResult(response); onPatientChange(form);
+    } catch (e) {
+      setResult(null); setError(e.message);
+    } finally { setLoading(false); }
+  };
+
+  const Field = ({label, name, type='number', min, max, step=1, children}) => (
+    <div className="field">
+      <label>{label}</label>
+      {children || <input type={type} value={form[name]} min={min} max={max} step={step}
+        onChange={e=>set(name,e.target.value)}/>}
+    </div>
+  );
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Drug Effectiveness Prediction</div>
+        <div className="page-sub">Enter baseline (Visit 1) patient data to generate AI-powered treatment prediction</div>
+      </div>
+
+      <div className="card">
+        <div className="section-header"><span className="section-icon">👤</span> Patient Information</div>
+        <div className="form-grid">
+          <Field label="Age (years)" name="age" min={18} max={90}/>
+          <Field label="Gender" name="gender">
+            <select value={form.gender} onChange={e=>set('gender',e.target.value)}>
+              <option value={0}>Female</option><option value={1}>Male</option>
+            </select>
+          </Field>
+          <Field label="BMI (kg/m²)" name="bmi" step={0.1} min={15} max={50}/>
+        </div>
+
+        <div className="section-header"><span className="section-icon">🩺</span> Clinical Data — Baseline (Visit 1)</div>
+        <div className="form-grid">
+          <Field label="HbA1c V1 (%)" name="hba1c_v1" step={0.1} min={4} max={15}/>
+          <Field label="Glucose V1 (mg/dL)" name="glucose_v1" step={0.5} min={70} max={400}/>
+          <Field label="Blood Pressure V1 (mmHg)" name="bp_v1" step={0.5} min={70} max={200}/>
+        </div>
+
+        <div className="section-header"><span className="section-icon">💊</span> Drug Regimen — Baseline</div>
+        <div style={{fontSize:12,color:'var(--steel)',marginBottom:12}}>Regimen-state code: 0 = absent; 1/2/3 = observed active states (not dosage levels).</div>
+        <div className="form-grid">
+          {['metformin','sulfonylurea','dpp4','sglt2','insulin'].map(d=>(
+            <Field key={d} label={d.charAt(0).toUpperCase()+d.slice(1)} name={`${d}_v1`}>
+              <select value={form[`${d}_v1`]} onChange={e=>set(`${d}_v1`,e.target.value)}>
+                {[0,1,2,3].map(code=><option value={code} key={code}>{code} — {code===0?'Absent':'Active regimen state'}</option>)}
+              </select>
+            </Field>
+          ))}
+        </div>
+
+        <div className="section-header"><span className="section-icon">🏃</span> Lifestyle & Behaviour</div>
+        <div className="form-grid">
+          {['adherence','diet','exercise'].map(f=>(
+            <Field key={f} label={f.charAt(0).toUpperCase()+f.slice(1)} name={f}>
+              <select value={form[f]} onChange={e=>set(f,e.target.value)}>
+                <option value={0}>0 — No</option><option value={1}>1 — Yes</option>
+              </select>
+            </Field>
+          ))}
+        </div>
+
+        <div style={{marginTop:28}}>
+          <button className={`btn-submit ${loading?'loading':''}`} onClick={submit}>
+            {loading ? <><span className="spinner"/> Analysing…</> : <>🔮 Generate Prediction</>}
+          </button>
+        </div>
+      </div>
+
+      {error && <div className="login-err" role="alert" style={{marginTop:16}}>{error}</div>}
+      {result && <ResultPanel result={result} form={form}/>} 
+    </div>
+  );
+}
+
+function ResultPanel({result, form}) {
+  const cl = result.effective ? 'effective' : 'not-effective';
+  const cluster_info = result.cluster_info;
+
+  return (
+    <div>
+      <div className={`result-panel ${cl}`}>
+        <div className="result-icon">{result.effective ? '✅' : '⚠️'}</div>
+        <div className="result-verdict">{result.effective ? 'Treatment Likely Effective' : 'Treatment May Be Ineffective'}</div>
+        <div style={{color:'var(--steel)',marginTop:6,marginBottom:20}}>
+          Random Forest model · {result.effective ? 'Positive' : 'Negative'} prediction with {result.confidence}% confidence
+        </div>
+        <div className="confidence-bar">
+          <div className="bar-label"><span>Effective</span><span>{result.prob_effective}%</span></div>
+          <div className="bar-track"><div className="bar-fill" style={{width:`${result.prob_effective}%`,background:'#22c55e'}}/></div>
+        </div>
+        <div className="confidence-bar" style={{marginTop:10}}>
+          <div className="bar-label"><span>Not Effective</span><span>{result.prob_not_effective}%</span></div>
+          <div className="bar-track"><div className="bar-fill" style={{width:`${result.prob_not_effective}%`,background:'#ef4444'}}/></div>
+        </div>
+      </div>
+
+      <div className="grid-2" style={{marginTop:20}}>
+        <div className="card">
+          <div className="card-title">Patient Cluster Assignment</div>
+          <div style={{display:'flex',alignItems:'baseline',gap:10}}>
+            <div style={{fontFamily:'DM Mono',fontSize:'3rem',color:'var(--accent)'}}>C{result.cluster}</div>
+            <div>
+              <div style={{fontWeight:600,fontSize:15}}>Cluster {result.cluster}</div>
+              <div style={{color:'var(--steel)',fontSize:13}}>{cluster_info.size} patients in this group</div>
+            </div>
+          </div>
+          <div style={{marginTop:16,display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+            {[['Cluster HbA1c', cluster_info.mean_hba1c+'%'],['Cluster BMI', cluster_info.mean_bmi],['Mean Age', cluster_info.mean_age+' yr'],['Effectiveness Rate', Math.round(cluster_info.effectiveness_rate*100)+'%']].map(([l,v])=>(
+              <div key={l}><div style={{fontSize:11,color:'var(--steel)',fontWeight:600,textTransform:'uppercase',letterSpacing:'.07em'}}>{l}</div><div style={{fontFamily:'DM Mono',fontSize:18,marginTop:4}}>{v}</div></div>
+            ))}
+          </div>
+        </div>
+        <div className="card">
+          <div className="card-title">Key Risk Indicators</div>
+          {[
+            {label:'HbA1c', val:form.hba1c_v1, warn:form.hba1c_v1>7.0, unit:'%', note:form.hba1c_v1>7.0?'Elevated':'Normal'},
+            {label:'Blood Glucose', val:form.glucose_v1, warn:form.glucose_v1>180, unit:'mg/dL', note:form.glucose_v1>180?'Hyperglycaemic':'Controlled'},
+            {label:'Blood Pressure', val:form.bp_v1, warn:form.bp_v1>130, unit:'mmHg', note:form.bp_v1>130?'Elevated':'Normal'},
+            {label:'BMI', val:form.bmi, warn:form.bmi>25, unit:'', note:form.bmi>30?'Obese':form.bmi>25?'Overweight':'Normal'},
+          ].map(({label,val,warn,unit,note})=>(
+            <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'9px 0',borderBottom:'1px solid var(--border)'}}>
+              <span style={{fontSize:14}}>{label}</span>
+              <span style={{display:'flex',alignItems:'center',gap:8}}>
+                <span style={{fontFamily:'DM Mono',fontSize:14}}>{val}{unit}</span>
+                <span className={`stat-badge ${warn?'badge-warn':'badge-safe'}`}>{note}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── COUNTERFACTUAL PAGE ────────────────────────────────────────────────────
+function CounterfactualPage({patient,onGo}) {
+  const [form,setForm]=useState(patient);
+  const [result,setResult]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState('');
+
+  const set = (k,v) => setForm(p=>({...p,[k]:Number(v)}));
+  useEffect(()=>setForm(patient),[patient]);
+
+  const submit = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      setResult(await apiRequest('/counterfactual', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)}));
+    } catch (e) {
+      setResult(null); setError(e.message);
+    } finally { setLoading(false); }
+  };
+
+  const clsMap = ['s1','s2','s3'];
+  const icons = ['💡','💊','🔬'];
+
+  if (!form) return <PatientRequired onGo={onGo}/>;
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Predictive What-If Analysis</div>
+        <div className="page-sub">Simulate treatment modifications and visualise predicted probability changes</div>
+      </div>
+
+      <div className="card">
+        <div style={{fontSize:14,color:'var(--steel)',marginBottom:20}}>Uses the active patient entered in Predict: age {form.age}, BMI {form.bmi}, HbA1c {form.hba1c_v1}%.</div>
+        <div style={{marginTop:22}}>
+          <button className={`btn-submit ${loading?'loading':''}`} onClick={submit}>
+            {loading?<><span className="spinner"/> Computing…</>:<>⚡ Run Counterfactual Analysis</>}
+          </button>
+        </div>
+      </div>
+
+      {error && <div className="login-err" role="alert" style={{marginTop:16}}>{error}</div>}
+      {result && (
+        <div style={{marginTop:24}}>
+          <div className="card" style={{marginBottom:20}}>
+            <div className="card-title">Baseline Predictive Assessment</div>
+            <div style={{display:'flex',alignItems:'center',gap:20}}>
+              <div style={{fontFamily:'DM Mono',fontSize:'3rem',color:result.original.effective?'var(--safe)':'var(--warn)'}}>
+                {result.original.prob_effective}%
+              </div>
+              <div>
+                <div style={{fontWeight:600,fontSize:16}}>Predicted outcome: {result.original.effective?'Effective':'Not Effective'}</div>
+                <div style={{color:'var(--steel)',fontSize:13}}>Baseline effectiveness probability</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="cf-grid">
+            {result.scenarios.map((s,i)=>{
+              const d = s.delta_confidence;
+              return (
+                <div key={i} className={`cf-card card ${clsMap[i]}`}>
+                  <div className="cf-scenario">{icons[i]} Scenario {i+1}</div>
+                  <div className="cf-name">{s.name}</div>
+                  <div style={{color:'var(--steel)',fontSize:12,marginBottom:14}}>{s.description}</div>
+                  <div style={{display:'flex',alignItems:'baseline',gap:12}}>
+                    <div className={`cf-delta ${d>0?'pos':d<0?'neg':'neu'}`}>
+                      {d>0?'+':''}{d}%
+                    </div>
+                    <div style={{fontSize:13,color:'var(--steel)'}}>change in effectiveness probability</div>
+                  </div>
+                  <div style={{marginTop:14}}>
+                    <div style={{fontFamily:'DM Mono',fontSize:18}}>{s.prediction.prob_effective}%</div>
+                    <div style={{fontSize:12,color:'var(--steel)'}}>New probability of effectiveness</div>
+                  </div>
+                  <div className="cf-changes">
+                    {Object.entries(s.changes).map(([k,v])=>(
+                      <span className="cf-tag" key={k}>{k}={v}</span>
+                    ))}
+                  </div>
+                  <div className="cf-rec">{s.recommendation}</div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="card" style={{marginTop:20}}>
+            <div className="card-title">Scenario Comparison</div>
+            <BarChart
+              labels={['Original','Scenario 1\nLifestyle','Scenario 2\nMedication','Scenario 3\nCombination']}
+              data={[result.original.prob_effective,...result.scenarios.map(s=>s.prediction.prob_effective)]}
+              colors={['#8492a6','#0ea5e9','#f59e0b','#10b981']}
+            />
+            <div style={{marginTop:12,fontSize:13,color:'var(--steel)'}}>Best predicted scenario: <strong>{result.best_scenario}</strong></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── RESEARCH PAGE ──────────────────────────────────────────────────────────
+function CausalPage({patient,onGo}) {
+  const [form,setForm]=useState(patient); const [treatment,setTreatment]=useState('metformin');
+  const [result,setResult]=useState(null); const [loading,setLoading]=useState(false); const [error,setError]=useState('');
+  useEffect(()=>setForm(patient),[patient]);
+  const run=async()=>{
+    setLoading(true); setError('');
+    try {
+      const current=form[`${treatment}_v1`]>0?1:0;
+      const [ate,cate,counterfactual,recommendation,explanation]=await Promise.all([
+        apiRequest('/causal/ate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({treatment})}),
+        apiRequest('/causal/cate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,treatment})}),
+        apiRequest('/causal/counterfactual',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,treatment,alternative_state:current?0:1})}),
+        apiRequest('/causal/recommendation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)}),
+        apiRequest('/explain',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)})
+      ]);
+      setResult({ate,cate,counterfactual,recommendation,explanation});
+    } catch(e) { setError(e.message); setResult(null); } finally { setLoading(false); }
+  };
+  if (!form) return <PatientRequired onGo={onGo}/>;
+  const currentState=form[`${treatment}_v1`]>0;
+  const direction=currentState ? `Estimated change if ${treatment} is removed` : `Estimated effect of adding ${treatment}`;
+  return <div>
+    <div className="page-header"><div className="page-title">Causal & Explainability Analysis</div><div className="page-sub">Add-on effect estimates are conditional research estimates, not prescribing advice.</div></div>
+    <div className="card"><div style={{fontSize:14,color:'var(--steel)',marginBottom:16}}>Uses the active patient entered in Predict: age {form.age}, BMI {form.bmi}, HbA1c {form.hba1c_v1}%.</div><div className="field"><label>Drug add-on estimate</label><select value={treatment} onChange={e=>setTreatment(e.target.value)}>{['metformin','sulfonylurea','dpp4','sglt2','insulin'].map(d=><option key={d} value={d}>{d}</option>)}</select></div><button className={`btn-submit ${loading?'loading':''}`} style={{marginTop:20}} onClick={run}>{loading?'Analysing…':'Run SHAP + Causal Analysis'}</button></div>
+    {error&&<div className="login-err" role="alert" style={{marginTop:16}}>{error}</div>}
+    {result&&<div style={{marginTop:20}}><div className="grid-2"><div className="card"><div className="card-title">SHAP Explainability</div><div style={{fontSize:13,color:'var(--steel)',marginBottom:10}}>SHAP explains the predictive model; it does not establish causality.</div>{result.explanation.feature_contributions.slice(0,6).map(x=><div className="cluster-stat" key={x.feature}><span>{x.feature} ({x.direction})</span><strong>{x.shap_value}</strong></div>)}</div><div className="card"><div className="card-title">ATE & CATE</div><div className="cluster-stat"><span>Patient CATE</span><strong>{(result.cate.patient_cate*100).toFixed(1)} pp</strong></div><div className="cluster-stat"><span>Population ATE</span><strong>{(result.ate.ate_estimate*100).toFixed(1)} pp</strong></div><div className="cluster-stat"><span>ATE 95% CI</span><strong>[{(result.ate.ci_lower*100).toFixed(1)}, {(result.ate.ci_upper*100).toFixed(1)}] pp</strong></div><div className="cluster-stat"><span>Positivity</span><strong>{result.cate.positivity_flag?'within observed support':'outside/near support'}</strong></div></div></div><div className="grid-2" style={{marginTop:20}}><div className="card"><div className="card-title">Causal Counterfactual</div><p>{direction}: <strong>{result.counterfactual.estimated_effect>=0?'+':''}{(result.counterfactual.estimated_effect*100).toFixed(1)} percentage points</strong></p><p style={{fontSize:13,color:'var(--steel)',marginTop:10}}>{result.counterfactual.disclaimer}</p></div><div className="card"><div className="card-title">Patient-specific causal evidence</div><p style={{fontSize:13,lineHeight:1.6}}>For patients with similar baseline characteristics, the model estimates an additional treatment effect of <strong>{result.cate.patient_cate>=0?'+':''}{(result.cate.patient_cate*100).toFixed(1)} percentage points</strong> for {treatment}. The population-level estimated add-on effect is <strong>{result.ate.ate_estimate>=0?'+':''}{(result.ate.ate_estimate*100).toFixed(1)} percentage points</strong> (95% CI: {(result.ate.ci_lower*100).toFixed(1)} to {(result.ate.ci_upper*100).toFixed(1)}). The patient is {result.cate.positivity_flag?'within':'outside or near'} the observed treatment-support region. These are synthetic-data research estimates, not prescribing recommendations.</p></div></div></div>}
+  </div>;
+}
+
+function PatientAssessmentPage({patient,onGo}) {
+  const [data,setData]=useState(null); const [error,setError]=useState(''); const [loading,setLoading]=useState(false); const [aiRecommendations,setAiRecommendations]=useState(null); const [aiError,setAiError]=useState(''); const [aiLoading,setAiLoading]=useState(false);
+  const load=async()=>{ if(!patient)return; setLoading(true);setError('');try{const [prediction,explanation,...causal]=await Promise.all([apiRequest('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(patient)}),apiRequest('/explain',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(patient)}),...['metformin','sulfonylurea','dpp4','sglt2','insulin'].flatMap(t=>[apiRequest('/causal/ate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({treatment:t})}),apiRequest('/causal/cate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...patient,treatment:t})})])]);const evidence=['metformin','sulfonylurea','dpp4','sglt2','insulin'].map((t,i)=>({t,ate:causal[i*2],cate:causal[i*2+1]}));setData({prediction,explanation,evidence});}catch(e){setError(e.message)}finally{setLoading(false)}};
+  const generateAi=async()=>{setAiLoading(true);setAiError('');try{const response=await apiRequest('/recommendations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(patient)});if(!Array.isArray(response.recommendations)||response.recommendations.length!==5)throw new Error('AI recommendation service returned an incomplete response.');setAiRecommendations(response.recommendations)}catch(e){setAiError(e.message)}finally{setAiLoading(false)}};
+  useEffect(()=>{setData(null);setError('');setAiRecommendations(null);setAiError('');load()},[patient]);
+  if(!patient)return <PatientRequired onGo={onGo}/>;
+  if(loading)return <div className="card">Loading patient assessment…</div>;
+  if(error)return <div className="login-err" role="alert">{error}</div>;
+  if(!data)return <div className="card">Patient assessment is ready to load.</div>;
+  const p=data.prediction;
+  return <div><div className="page-header"><div className="page-title">Patient Assessment</div><div className="page-sub">Integrated predictive and causal evidence for clinical review.</div></div><div className="grid-2"><div className="card"><div className="card-title">Predictive Assessment</div><div className="cluster-stat"><span>Predicted outcome</span><strong>{p.effective?'Effective':'Not Effective'}</strong></div><div className="cluster-stat"><span>Effectiveness probability</span><strong>{p.prob_effective}%</strong></div><div className="cluster-stat"><span>Not-effective probability</span><strong>{p.prob_not_effective}%</strong></div><div className="cluster-stat"><span>Model</span><strong>{p.model_used}</strong></div></div><div className="card"><div className="card-title">Patient Profile</div><div className="cluster-stat"><span>Age / BMI / HbA1c</span><strong>{patient.age} / {patient.bmi} / {patient.hba1c_v1}%</strong></div><div className="cluster-stat"><span>Cluster</span><strong>C{p.cluster}</strong></div><div className="cluster-stat"><span>Cluster size</span><strong>{p.cluster_info.size}</strong></div></div></div><div className="grid-2" style={{marginTop:20}}><div className="card"><div className="card-title">Key Model Explanation</div><p style={{fontSize:13,color:'var(--steel)',marginBottom:10}}>SHAP explains the predictive model and does not establish causality.</p>{data.explanation.feature_contributions.slice(0,5).map(x=><div className="cluster-stat" key={x.feature}><span>{x.feature}</span><strong>{x.shap_value}</strong></div>)}</div><div className="card"><div className="card-title">Overall Decision-Support Assessment</div><p style={{fontSize:14,lineHeight:1.65}}>The predictive model estimates a {p.effective?'higher probability of treatment effectiveness':'higher probability of treatment ineffectiveness'} for this patient. Causal analysis indicates heterogeneous estimated add-on effects across the evaluated treatment options. These synthetic-data research estimates provide model-based evidence for clinical review; they do not establish clinical suitability, prescribe, or select a treatment.</p></div></div><div className="card" style={{marginTop:20}}><div className="card-title">Causal Evidence</div>{data.evidence.map(x=><div className="cluster-stat" key={x.t}><span>{x.t}: patient CATE {(x.cate.patient_cate*100).toFixed(1)} pp; population ATE {(x.ate.ate_estimate*100).toFixed(1)} pp (95% CI {(x.ate.ci_lower*100).toFixed(1)} to {(x.ate.ci_upper*100).toFixed(1)})</span><strong>{x.cate.positivity_flag?'within support':'support warning'}</strong></div>)}</div><div className="card" style={{marginTop:20}}><div className="card-title">🧠 AI-Assisted Decision Support</div><p style={{fontSize:13,color:'var(--steel)',lineHeight:1.6}}>Generated from Cause2Cure predictive, SHAP, causal, and patient-profile evidence. This is not a prescription or treatment recommendation.</p><button className="btn btn-primary" onClick={generateAi} disabled={aiLoading} style={{marginTop:12}}>{aiLoading?'Generating…':'Generate AI Recommendations'}</button>{aiError&&<div className="login-err" role="alert" style={{marginTop:12}}>{aiError}</div>}{aiRecommendations&&<div className="grid-2" style={{marginTop:16}}>{aiRecommendations.map((item,index)=><div className="card" key={index}><div className="card-title">{item.title}</div><p style={{fontSize:14,lineHeight:1.55}}>{item.recommendation}</p><p style={{fontSize:12,color:'var(--steel)',lineHeight:1.45}}><strong>{item.evidence_type} evidence:</strong> {item.evidence}</p></div>)}</div>}</div></div>;
+}
+
+function ResearchPage({insights, clusters, error}) {
+  if (error) return <div className="login-err" role="alert">{error}</div>;
+  if (!insights || !clusters) return <div className="card">Loading live model insights…</div>;
+  const fi = Object.entries(insights.feature_importance).sort((a,b)=>b[1]-a[1]);
+  const results = insights.model_results;
+  const best = results[insights.best_model];
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Research Insights</div>
+        <div className="page-sub">Model performance, feature analysis, and population-level insights</div>
+      </div>
+
+      {/* Model performance */}
+      <div className="grid-4" style={{marginBottom:20}}>
+        {[['Accuracy',`${(best.accuracy*100).toFixed(1)}%`,insights.best_model],['ROC-AUC',best.roc_auc.toFixed(4),insights.best_model],['Precision',`${(best.precision*100).toFixed(1)}%`,insights.best_model],['Recall',`${(best.recall*100).toFixed(1)}%`,insights.best_model]].map(([l,v,s])=>(
+          <div className="stat-box" key={l}>
+            <div className="stat-label">{l}</div>
+            <div className="stat-value">{v}</div>
+            <div className="stat-sub">{s}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid-2" style={{marginBottom:20}}>
+        <div className="card">
+          <div className="card-title">Model Comparison</div>
+          <div style={{marginBottom:16}}>
+            {Object.entries(results).map(([name,r])=>(
+              <div key={name} style={{padding:'14px 0',borderBottom:'1px solid var(--border)'}}>
+                <div style={{fontWeight:600,marginBottom:8}}>{name}</div>
+                <div className="metric-row">
+                  {Object.entries(r).map(([k,v])=>(
+                    <span key={k} className="metric-pill"><span style={{color:'var(--steel)',fontSize:11}}>{k}: </span>{v}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="card">
+          <div className="card-title">Feature Importance (Random Forest)</div>
+          {fi.map(([k,v])=>(
+            <div className="fi-bar" key={k}>
+              <div className="fi-label">{k}</div>
+              <div className="fi-track"><div className="fi-fill" style={{width:`${v*100/0.22*100}%`}}/></div>
+              <div className="fi-val">{(v*100).toFixed(1)}%</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid-2" style={{marginBottom:20}}>
+        <div className="card">
+          <div className="card-title">Patient Cluster Distribution</div>
+          <DoughnutChart
+            labels={Object.keys(clusters.cluster_summary).map(c=>`Cluster ${c}`)}
+            data={Object.values(clusters.cluster_summary).map(c=>c.size)}
+          />
+        </div>
+        <div className="card">
+          <div className="card-title">HbA1c Trend — Visit 1 → Visit 3</div>
+          <img src={`${API}/plot/hba1c_trend`} alt="Backend-generated HbA1c trend" style={{width:'100%',height:'auto'}} />
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-title">Cluster Profiles</div>
+        <div className="cluster-cards">
+          {Object.entries(clusters.cluster_summary).map(([c,info])=>(
+            <div className="cluster-card" key={c}>
+              <div className="cluster-title">Cluster {c}</div>
+              {[['Patients',info.size],['Mean HbA1c',info.mean_hba1c+'%'],['Mean BMI',info.mean_bmi],['Mean Age',info.mean_age+' yr'],['Adherent',info.mean_adherence?'Yes':'No'],['Effectiveness Rate',Math.round(info.effectiveness_rate*100)+'%']].map(([l,v])=>(
+                <div className="cluster-stat" key={l}><span>{l}</span><strong>{v}</strong></div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── OVERVIEW PAGE ──────────────────────────────────────────────────────────
+function OverviewPage({insights, clusters, error}) {
+  if (error) return <div className="login-err" role="alert">{error}</div>;
+  if (!insights || !clusters) return <div className="card">Loading backend status…</div>;
+  const best = insights.model_results[insights.best_model];
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">System Overview</div>
+        <div className="page-sub">DiaCDSS — Type 2 Diabetes Clinical Decision Support</div>
+      </div>
+      <div className="grid-4" style={{marginBottom:20}}>
+        {[[insights.dataset_size,'Total Patients','Dataset size'],[best.roc_auc.toFixed(4),'Best ROC-AUC',insights.best_model],[clusters.optimal_k,'Patient Clusters','KMeans model'],[insights.feature_importance ? Object.keys(insights.feature_importance).length : '—','Features Used','Baseline (V1) only']].map(([v,l,s])=>(
+          <div className="stat-box" key={l}>
+            <div className="stat-label">{l}</div>
+            <div className="stat-value">{v}</div>
+            <div className="stat-sub">{s}</div>
+          </div>
+        ))}
+      </div>
+      <div className="grid-2" style={{marginBottom:20}}>
+        <div className="card">
+          <div className="card-title">System Capabilities</div>
+          {[['🔮','Drug Effectiveness Prediction','Random Forest & Gradient Boosting with SMOTE balancing'],['👥','Patient Stratification','KMeans clustering into 4 clinical groups'],['⚡','Counterfactual Analysis','3 what-if scenarios for treatment optimisation'],['📊','Research Insights','Feature importance, model metrics, population analytics']].map(([ic,t,d])=>(
+            <div key={t} style={{display:'flex',gap:14,padding:'13px 0',borderBottom:'1px solid var(--border)'}}>
+              <span style={{fontSize:22}}>{ic}</span>
+              <div><div style={{fontWeight:600,fontSize:14}}>{t}</div><div style={{color:'var(--steel)',fontSize:13,marginTop:2}}>{d}</div></div>
+            </div>
+          ))}
+        </div>
+        <div className="card">
+          <div className="card-title">Model Architecture</div>
+          <table style={{width:'100%',borderCollapse:'collapse'}}>
+            <thead><tr style={{background:'var(--cream)'}}>
+              <th style={{padding:'10px 12px',textAlign:'left',fontSize:11,textTransform:'uppercase',letterSpacing:'.07em',color:'var(--steel)',fontWeight:700}}>Component</th>
+              <th style={{padding:'10px 12px',textAlign:'left',fontSize:11,textTransform:'uppercase',letterSpacing:'.07em',color:'var(--steel)',fontWeight:700}}>Details</th>
+            </tr></thead>
+            <tbody>
+              {[['Classifier',insights.best_model],['Imbalance Handling','SMOTE oversampling'],['Clustering',`KMeans, k=${clusters.optimal_k}`],['Train/Test Split','80% / 20% stratified'],['Input',`${Object.keys(insights.feature_importance).length} baseline features (V1 only)`],['Class Balance',Object.entries(insights.class_distribution).map(([label,count])=>`${label}: ${count}`).join(' / ') + ' → training balanced by SMOTE']].map(([k,v])=>(
+                <tr key={k} style={{borderTop:'1px solid var(--border)'}}>
+                  <td style={{padding:'10px 12px',fontWeight:600,fontSize:14}}>{k}</td>
+                  <td style={{padding:'10px 12px',fontFamily:'DM Mono',fontSize:13,color:'var(--steel)'}}>{v}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="card" style={{borderLeft:'4px solid var(--accent)'}}>
+        <div style={{display:'flex',gap:16,alignItems:'flex-start'}}>
+          <span style={{fontSize:28}}>⚠️</span>
+          <div>
+            <div style={{fontWeight:700,marginBottom:6}}>Clinical Disclaimer</div>
+            <div style={{color:'var(--steel)',fontSize:14,lineHeight:1.6}}>DiaCDSS is a research-grade decision support tool designed to assist — not replace — clinical judgment. All predictions are probabilistic and must be interpreted by qualified healthcare professionals. The system uses only baseline (Visit 1) data. Current backend ROC-AUC: {best.roc_auc.toFixed(4)}.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── APP SHELL ──────────────────────────────────────────────────────────────
+function App() {
+  const [user, setUser]   = useState(null);
+  const [page, setPage]   = useState('overview');
+  const [patient, setPatient] = useState(() => { try { const saved=sessionStorage.getItem(PATIENT_CONTEXT_KEY); return saved ? JSON.parse(saved) : null; } catch (_) { return null; } });
+  const [insights, setInsights] = useState(null);
+  const [clusters, setClusters] = useState(null);
+  const [backendError, setBackendError] = useState('');
+
+  useEffect(() => {
+    if (!user) return;
+    Promise.all([apiRequest('/insights'), apiRequest('/clusters')])
+      .then(([liveInsights, liveClusters]) => { setInsights(liveInsights); setClusters(liveClusters); setBackendError(''); })
+      .catch(e => setBackendError(e.message));
+  }, [user]);
+  useEffect(() => { try { if (patient) sessionStorage.setItem(PATIENT_CONTEXT_KEY, JSON.stringify(patient)); else sessionStorage.removeItem(PATIENT_CONTEXT_KEY); } catch (_) {} }, [patient]);
+  const goPredict = () => setPage('predict');
+
+  if (!user) return <Login onLogin={setUser}/>;
+
+  const navItems = [
+    {id:'overview',label:'Overview',icon:'🏠'},
+    {id:'predict', label:'Predict',  icon:'🔮'},
+    {id:'counterfactual',label:'What-if Analysis',icon:'⚡'},
+    {id:'causal',label:'Causal Analysis',icon:'🔬'},
+    {id:'assessment',label:'Patient Assessment',icon:'🩺'},
+    {id:'research',label:'Research Insights',icon:'📊'},
+  ];
+
+  const pages = {
+    overview:<OverviewPage insights={insights} clusters={clusters} error={backendError}/>,
+    predict:<PredictPage patient={patient} onPatientChange={setPatient}/>,
+    counterfactual:<CounterfactualPage patient={patient} onGo={goPredict}/>,
+    causal:<CausalPage patient={patient} onGo={goPredict}/>,
+    assessment:<PatientAssessmentPage patient={patient} onGo={goPredict}/>,
+    research:<ResearchPage insights={insights} clusters={clusters} error={backendError}/>
+  };
+
+  return (
+    <div className="app">
+      <aside className="sidebar">
+        <div className="sidebar-brand">
+          <div className="logo">CAUSE2CURE</div>
+          <div className="tagline">Clinical Decision Support</div>
+        </div>
+        {patient && <div style={{margin:'16px 18px 0',padding:'11px 12px',border:'1px solid #ffffff20',borderRadius:9,color:'var(--paper)'}}><div style={{fontSize:10,letterSpacing:'.1em',color:'#ffffff66',fontWeight:700}}>CURRENT PATIENT</div><div style={{fontSize:12,marginTop:5}}>Age {patient.age} · BMI {patient.bmi} · HbA1c {patient.hba1c_v1}%</div></div>}
+        <nav className="sidebar-nav">
+          {navItems.map(n=>(
+            <button key={n.id} className={`nav-item ${page===n.id?'active':''}`} onClick={()=>setPage(n.id)}>
+              <span className="nav-icon">{n.icon}</span>{n.label}
+            </button>
+          ))}
+        </nav>
+        <div className="sidebar-footer">
+          <div className="doctor-badge">
+            <div className="avatar">{user.name.split(' ').map(w=>w[0]).join('')}</div>
+            <div>
+              <div className="doctor-name">{user.name}</div>
+              <div className="doctor-role">{user.role}</div>
+            </div>
+          </div>
+          <button className="logout-btn" onClick={()=>setUser(null)}>Sign Out</button>
+        </div>
+      </aside>
+      <main className="main">
+        {pages[page]}
+      </main>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
