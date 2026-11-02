@@ -1,0 +1,20 @@
+{
+  "model": "RandomForest",
+  "explanation_type": "SHAP values for predictive effectiveness probability; not causal evidence.",
+  "global_mean_abs_shap": {
+    "hba1c_v1": 0.101751,
+    "adherence": 0.07342,
+    "diet": 0.060567,
+    "metformin_v1": 0.058419,
+    "exercise": 0.05037,
+    "sglt2_v1": 0.040853,
+    "dpp4_v1": 0.036359,
+    "sulfonylurea_v1": 0.028868,
+    "gender": 0.016654,
+    "bmi": 0.009543,
+    "glucose_v1": 0.006904,
+    "bp_v1": 0.006333,
+    "age": 0.0052,
+    "insulin_v1": 0.004497
+  }
+}

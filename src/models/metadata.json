@@ -1,0 +1,154 @@
+{
+  "best_model": "RandomForest",
+  "target_encoding": {
+    "0": "Effective",
+    "1": "Not Effective"
+  },
+  "features": [
+    "age",
+    "gender",
+    "bmi",
+    "hba1c_v1",
+    "glucose_v1",
+    "bp_v1",
+    "metformin_v1",
+    "sulfonylurea_v1",
+    "dpp4_v1",
+    "sglt2_v1",
+    "insulin_v1",
+    "adherence",
+    "diet",
+    "exercise"
+  ],
+  "results": {
+    "RandomForest": {
+      "accuracy": 0.6988,
+      "precision": 0.5286,
+      "recall": 0.5502,
+      "f1": 0.5392,
+      "roc_auc": 0.7341,
+      "confusion_matrix": [
+        [
+          439,
+          132
+        ],
+        [
+          121,
+          148
+        ]
+      ]
+    },
+    "GradientBoosting": {
+      "accuracy": 0.7036,
+      "precision": 0.5373,
+      "recall": 0.5353,
+      "f1": 0.5363,
+      "roc_auc": 0.7302,
+      "confusion_matrix": [
+        [
+          447,
+          124
+        ],
+        [
+          125,
+          144
+        ]
+      ]
+    }
+  },
+  "feature_importance": {
+    "hba1c_v1": 0.2036,
+    "metformin_v1": 0.1132,
+    "adherence": 0.0916,
+    "diet": 0.0725,
+    "bp_v1": 0.0661,
+    "sglt2_v1": 0.066,
+    "bmi": 0.0658,
+    "glucose_v1": 0.0644,
+    "exercise": 0.0587,
+    "dpp4_v1": 0.0568,
+    "age": 0.0551,
+    "sulfonylurea_v1": 0.0522,
+    "gender": 0.0212,
+    "insulin_v1": 0.0129
+  },
+  "cluster_summary": {
+    "0": {
+      "size": 925,
+      "mean_hba1c": 6.22,
+      "mean_bmi": 21.71,
+      "mean_age": 48.7,
+      "mean_adherence": 0.0,
+      "effectiveness_rate": 0.571,
+      "dominant_drugs": {
+        "metformin": 1.9,
+        "sulfonylurea": 1.25,
+        "dpp4": 0.99,
+        "sglt2": 0.85,
+        "insulin": 0.21
+      }
+    },
+    "1": {
+      "size": 1326,
+      "mean_hba1c": 6.22,
+      "mean_bmi": 21.73,
+      "mean_age": 48.43,
+      "mean_adherence": 1.0,
+      "effectiveness_rate": 0.682,
+      "dominant_drugs": {
+        "metformin": 1.88,
+        "sulfonylurea": 1.19,
+        "dpp4": 0.96,
+        "sglt2": 0.92,
+        "insulin": 0.21
+      }
+    },
+    "2": {
+      "size": 820,
+      "mean_hba1c": 7.12,
+      "mean_bmi": 25.92,
+      "mean_age": 60.2,
+      "mean_adherence": 0.0,
+      "effectiveness_rate": 0.652,
+      "dominant_drugs": {
+        "metformin": 1.92,
+        "sulfonylurea": 1.2,
+        "dpp4": 0.91,
+        "sglt2": 0.93,
+        "insulin": 0.24
+      }
+    },
+    "3": {
+      "size": 1129,
+      "mean_hba1c": 7.18,
+      "mean_bmi": 25.69,
+      "mean_age": 60.25,
+      "mean_adherence": 1.0,
+      "effectiveness_rate": 0.786,
+      "dominant_drugs": {
+        "metformin": 1.92,
+        "sulfonylurea": 1.16,
+        "dpp4": 0.94,
+        "sglt2": 0.93,
+        "insulin": 0.2
+      }
+    }
+  },
+  "optimal_k": 4,
+  "cluster_features": [
+    "age",
+    "bmi",
+    "hba1c_v1",
+    "glucose_v1",
+    "bp_v1",
+    "adherence"
+  ],
+  "dataset_size": 4200,
+  "legacy_artifacts": {
+    "scaler.pkl": "Legacy classifier scaler retained for compatibility; predictive inference uses raw features and does not load this artifact."
+  },
+  "class_distribution": {
+    "0": 2854,
+    "1": 1346
+  }
+}
