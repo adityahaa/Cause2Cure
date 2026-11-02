@@ -1,0 +1,6 @@
+* text=auto
+*.md text eol=lf
+# Preserve original archival source and evidence bytes.
+src/** -text
+requirements.txt -text
+*.png binary

@@ -1,0 +1,49 @@
+# Credentials and local configuration
+.env
+.env.*
+*.pem
+*.key
+credentials*.json
+secrets*.json
+
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Generated models, runtime registries and local patient material
+*.pkl
+*.pickle
+*.joblib
+*.db
+*.sqlite*
+registry/
+uploads/
+private/
+*.log
+*.err
+*.tmp
+*.bak
+
+# Build/editor/system files
+node_modules/
+dist/
+build/
+*.egg-info/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Source packages and unpublished documents
+*.zip
+*.pdf
+*.pptx
+work/

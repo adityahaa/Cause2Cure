@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "Please credit the Cause2Cure team. This is a research source archive; proceedings publication is in progress."
+title: "Cause2Cure: Causal AI for Drug Effectiveness Across Patient Groups"
+type: software
+authors:
+  - family-names: Jainapur
+    given-names: Shubham
+  - family-names: Jadhav
+    given-names: Kaustubh
+  - family-names: Hambire
+    given-names: Aditya
+  - family-names: Bathe
+    given-names: Devanand
+abstract: "Research source archive for synthetic-data treatment-response prediction, patient stratification, explanations and observational causal estimation in Type 2 diabetes."
