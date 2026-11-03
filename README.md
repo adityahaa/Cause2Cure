@@ -40,7 +40,7 @@ The ZIP implements rule-based predictive what-if edits. For causal estimation, e
 
 ## Dataset and evaluation
 
-The supplied CSV contains **4,200 synthetic patient records and 32 columns**. Fourteen baseline features are used for prediction. The manuscript reports a stratified **840-record frozen holdout**, with 3,360 development records; the holdout contains 571 majority-class and 269 minority-class observations.
+The supplied CSV contains **4,200 patient records and 32 columns**. Fourteen baseline features are used for prediction. The manuscript reports a stratified **840-record frozen holdout**, with 3,360 development records; the holdout contains 571 majority-class and 269 minority-class observations.
 
 The CSV is retained unchanged. It contains numeric fields and sequential synthetic record IDs, with no names, contact details or free-text notes. The synthetic generation procedure was not supplied. No clinician-entered registry records are included. See the [data dictionary](docs/DATA.md).
 
